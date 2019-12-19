@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import SignUp from './pages/Signup'
+import AppContext from './context/AppContext'
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component
+{
+  state = {
+    redirect : null
+  }
+
+  render()
+  {
+    let redirect
+    let page = this
+
+    if (this.state.redirect != null)
+      redirect = <Redirect to={this.state.redirect} />
+
+    return (
+      <Router>
+        <AppContext.Provider value={{
+          redirect : (url) => page.setState({redirect: url})
+        }}>
+          {redirect}
+          <Switch>
+            <Route exact path="/" component={SignUp} />
+            <Route path="*">
+              <p>404 Not Found</p>
+            </Route>
+          </Switch>
+        </AppContext.Provider>
+      </Router>
+    );
+  }
 }
 
 export default App;
